@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>rsdis sample</title>
+  </head>
+  <body>
+    <h1 id="visited">loading....</h1>
+    <script>
+      async function registerPageView() {
+        const res = await fetch("/pageview");
+        console.log(res);
+        const { view } = await res.json();
+        document.getElementById("visited").innerText = `${view} visitors!`;
+      }
+      registerPageView();
+    </script>
+  </body>
+</html>
