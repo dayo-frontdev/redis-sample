@@ -24,13 +24,15 @@ async function init() {
   async function verySlowQuery() {
     const promise = new promise((resolve) => {
       setTimeout(() => {
-        return new Date.toString();
+        resolve(new Date.toString());
       }, 5000);
     });
+    return promise;
   }
 
+  const cachedFn = cache("expensive-query", 10, verySlowQuery);
+
   app.get("/get", async (req, res) => {
-    const cachedFn = cache("expensive-query", 10, verySlowQuery);
     const data = cachedFn();
 
     res.json({
