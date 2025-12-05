@@ -42,7 +42,7 @@ async function init() {
   });
 
   app.get("/pageview", async (req, res) => {
-    const views = await client.incr("pageviews");
+    const view = await client.incr("pageviews");
     res.json({
       status: "ok",
       view,
