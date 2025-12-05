@@ -43,7 +43,7 @@ async function init() {
     const views = await client.incr("pageviews");
     res.json({
       status: "ok",
-      views,
+      view,
     });
   });
 
