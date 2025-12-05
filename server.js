@@ -1,36 +1,36 @@
 const express = require("express");
 const redis = require("redis");
+const client = redis.createClient();
+await client.connect();
+
+async function cache(key, ttl, slowFn) {
+  return async function cachedFn(...props) {
+    const cachhedResponse = await client.get(key);
+    if (cachhedResponse) {
+      return cachhedResponse;
+    }
+
+    const result = await slowFn(...props);
+    await client.setEx(key, ttl, slowFn);
+    return result;
+  };
+}
+
+async function verySlowQuery() {
+  const promise = new promise((resolve) => {
+    setTimeout(() => {
+      resolve(new Date.toString());
+    }, 5000);
+  });
+  return promise;
+}
+
+const cachedFn = cache("expensive-query", 10, verySlowQuery);
 
 async function init() {
-  const client = redis.createClient();
-  await client.connect();
   const app = express();
 
   app.use(express.static("./static"));
-
-  async function cache(key, ttl, slowFn) {
-    return async function cachedFn(...props) {
-      const cachhedResponse = await client.get(key);
-      if (cachhedResponse) {
-        return cachhedResponse;
-      }
-
-      const result = await slowFn(...props);
-      await client.setEx(key, ttl, slowFn);
-      return result;
-    };
-  }
-
-  async function verySlowQuery() {
-    const promise = new promise((resolve) => {
-      setTimeout(() => {
-        resolve(new Date.toString());
-      }, 5000);
-    });
-    return promise;
-  }
-
-  const cachedFn = cache("expensive-query", 10, verySlowQuery);
 
   app.get("/get", async (req, res) => {
     const data = cachedFn();
