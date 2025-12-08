@@ -5,7 +5,7 @@ async function init() {
   const client = redis.createClient();
   await client.connect();
 
-  async function cache(key, ttl, slowFn) {
+  function cache(key, ttl, slowFn) {
     return async function cachedFn(...props) {
       const cachhedResponse = await client.get(key);
       if (cachhedResponse) {
@@ -13,7 +13,7 @@ async function init() {
       }
 
       const result = await slowFn(...props);
-      await client.setEx(key, ttl, slowFn);
+      await client.set(key, ttl, slowFn);
       return result;
     };
   }
