@@ -34,7 +34,7 @@ async function init() {
   app.use(express.static("./static"));
 
   app.get("/get", async (req, res) => {
-    const data = cachedFn();
+    const data = await cachedFn();
 
     res.json({
       status: "ok",
