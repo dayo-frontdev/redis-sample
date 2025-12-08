@@ -12,6 +12,7 @@ async function init() {
     return async function cachedFn(...props) {
       const cachhedResponse = await client.get(key);
       if (cachhedResponse) {
+        console.log("it is cached");
         return cachhedResponse;
       }
 
@@ -22,6 +23,7 @@ async function init() {
   }
 
   async function verySlowQuery() {
+    console.log("oh no very slow query");
     const promise = new Promise((resolve) => {
       setTimeout(() => {
         resolve(new Date().toUTCString());
