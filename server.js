@@ -1,6 +1,9 @@
 const express = require("express");
 const redis = require("redis");
 
+const app = express();
+app.use(express.static("./static"));
+
 async function init() {
   const client = redis.createClient();
   await client.connect();
@@ -19,19 +22,15 @@ async function init() {
   }
 
   async function verySlowQuery() {
-    const promise = await new promise((resolve) => {
+    const promise = new Promise((resolve) => {
       setTimeout(() => {
-        resolve(new Date.toString());
+        resolve(new Date().toUTCString());
       }, 5000);
     });
     return promise;
   }
 
   const cachedFn = cache("expensive-query", 10, verySlowQuery);
-
-  const app = express();
-
-  app.use(express.static("./static"));
 
   app.get("/get", async (req, res) => {
     const data = await cachedFn();
