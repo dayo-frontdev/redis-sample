@@ -19,7 +19,7 @@ async function init() {
   }
 
   async function verySlowQuery() {
-    const promise = new promise((resolve) => {
+    const promise = await new promise((resolve) => {
       setTimeout(() => {
         resolve(new Date.toString());
       }, 5000);
