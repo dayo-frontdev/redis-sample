@@ -17,7 +17,7 @@ async function init() {
       }
 
       const result = await slowFn(...props);
-      await client.set(key, ttl, slowFn);
+      await client.setEx(key, ttl, slowFn);
       return result;
     };
   }
